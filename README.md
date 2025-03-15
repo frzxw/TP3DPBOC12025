@@ -74,21 +74,27 @@ Proyek ini diimplementasikan dalam beberapa bahasa pemrograman. Berikut adalah h
 Berikut adalah penjelasan rinci mengenai kelas yang ada pada proyek ini:
 
 1. Konsep Inheritance
+---
    Dalam proyek ini, konsep _inheritance_ (pewarisan) digunakan untuk merepresentasikan hubungan hierarkis antar komponen dalam sistem komputer. Kelas abstrak `Component` berfungsi sebagai kelas dasar bagi `Hardware` dan `Software`, yang kemudian diturunkan menjadi berbagai kelas turunan spesifik seperti `Motherboard`, `CPU`, `RAM`, `StorageDevice`, serta `OperatingSystem` dan `Application`. Dengan pendekatan ini, atribut umum seperti `manufacturer`, `model`, dan `price` dapat diwarisi oleh kelas turunannya tanpa harus dideklarasikan ulang, yang membuat kode lebih bersih, modular, dan mudah diperluas.
 
 2. Konsep Komposisi
+---
    Komposisi digunakan untuk menggambarkan hubungan _has-a_ antar komponen dalam sistem komputer. Kelas `Computer` memiliki `Motherboard`, `PowerSupply`, `Cooling`, `BIOS`, `OperatingSystem`, serta daftar `Software` dan `Peripheral`. Dengan pendekatan ini, sistem komputer dapat direpresentasikan secara lebih realistis, di mana setiap komponen memiliki peran spesifik yang bekerja secara bersama-sama. Selain itu, `Motherboard` juga mengandung berbagai perangkat keras seperti `CPU`, `RAM`, `ExpansionCard`, dan `StorageDevice`, yang menunjukkan bagaimana setiap komponen dapat berinteraksi dalam satu sistem yang lebih besar.
 
 3. Penggunaan Array of Objects
+---
    Proyek ini juga mengimplementasikan konsep _array of objects_ untuk menangani koleksi dari komponen tertentu. Sebagai contoh, kelas `Computer` memiliki atribut `vector<Peripheral*> peripherals`, yang digunakan untuk menyimpan daftar perangkat eksternal seperti keyboard, mouse, dan monitor. Selain itu, `Motherboard` memiliki `vector<RAM*> ramSlots` dan `vector<StorageDevice*> storageSlots`, yang memungkinkan komputer untuk menangani berbagai jenis penyimpanan dan modul memori dengan fleksibel. Pendekatan ini mempermudah pengelolaan banyak objek sekaligus dalam sistem.
 
 4. Kompleksitas dan Rasionalitas Desain
+---
    Diagram yang digunakan dalam proyek ini mencerminkan desain yang kompleks tetapi terstruktur dengan baik, mencerminkan sistem komputer yang modular dan scalable. Dengan membagi sistem menjadi kelas-kelas yang lebih spesifik berdasarkan fungsinya, desain ini memungkinkan perubahan dan pengembangan lebih lanjut tanpa harus merombak keseluruhan struktur. Selain itu, penggunaan antarmuka seperti `Bootable`, `Upgradable`, `Connectable`, dan `Executable` membantu dalam mendefinisikan perilaku khusus bagi berbagai komponen tanpa harus mengubah hierarki pewarisan, sehingga meningkatkan fleksibilitas desain.
 
-5. Hierarchical, Multiple, dan Hybrid Inheritance dalam Sistem Komputer
+5. Hierarchical, Multiple, dan Hybrid Inheritance
+---
    Proyek ini mengimplementasikan beberapa jenis pewarisan untuk mendukung modularitas dan fleksibilitas desain. _Hierarchical inheritance_ terlihat pada hubungan antara `StorageDevice` dengan `HDD` dan `SSD`, serta antara `Peripheral` dengan `Monitor`, `Keyboard`, dan `Mouse`. _Multiple inheritance_ diterapkan melalui penggunaan antarmuka seperti `Upgradable`, yang diimplementasikan oleh `RAM`, `Application`, dan `OperatingSystem`. Selain itu, proyek ini juga menerapkan _hybrid inheritance_ dengan menggabungkan pewarisan kelas dan implementasi antarmuka, seperti pada `Computer` yang merupakan turunan dari `Component` serta mengimplementasikan `Bootable`. Pendekatan ini memungkinkan berbagai komponen dalam sistem untuk memiliki karakteristik yang fleksibel sesuai kebutuhan fungsionalnya.
 
 6. Penjelasan Kelas
+---
 - `Component` adalah kelas dasar untuk semua komponen perangkat keras dan perangkat lunak yang memiliki atribut umum seperti `id`, `manufacturer`, `model`, dan `price`.
 - `Hardware` adalah kelas dasar untuk perangkat keras yang memiliki atribut seperti `serialNumber`, `installationDate`, dan `physicallyInstalled`.
 - `Software` adalah kelas dasar untuk perangkat lunak yang memiliki atribut seperti `version`, `licenseKey`, dan `sizeMB`.
