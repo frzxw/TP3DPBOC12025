@@ -150,6 +150,31 @@ public class Motherboard extends Hardware {
         this.soundCard = soundCard;
     }
 
+    public int getRam() {
+        int totalRam = 0;
+        for (RAM ram : ramSlots) {
+            totalRam += ram.getCapacityGB();
+        }
+        return totalRam;
+    }
+
+    public GraphicsCard getExpansionCard() {
+        for (ExpansionCard card : expansionSlots) {
+            if (card instanceof GraphicsCard) {
+                return (GraphicsCard) card;
+            }
+        }
+        return null;
+    }
+
+    public int getStorage() {
+        int totalStorage = 0;
+        for (StorageDevice storage : storageSlots) {
+            totalStorage += storage.getCapacityGB();
+        }
+        return totalStorage;
+    }
+
     public void installCPU(CPU cpu) {
         this.cpu = cpu;
     }
@@ -188,7 +213,4 @@ public class Motherboard extends Hardware {
         storageSlots.remove(storage);
     }
 
-    public void displayInfo() {
-
-    }
 }
