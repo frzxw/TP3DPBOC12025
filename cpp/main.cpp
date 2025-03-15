@@ -12,6 +12,16 @@ int main()
 
     Computer *demoComputer = createDemoComputer(today);
     computers.push_back(demoComputer);
+    computers.push_back(new Computer("PC-002", "Dell", "OptiPlex", 899.99, "Dell OptiPlex"));
+    computers.push_back(new Computer("PC-003", "HP", "Pavilion", 799.99, "HP Pavilion"));
+    computers.push_back(new Computer("PC-004", "Lenovo", "ThinkCentre", 999.99, "Lenovo ThinkCentre"));
+    computers.push_back(new Computer("PC-005", "Apple", "iMac", 1299.99, "Apple iMac"));
+    computers.push_back(new Computer("PC-006", "Asus", "ZenBook", 1099.99, "Asus ZenBook"));
+    computers.push_back(new Computer("PC-007", "Acer", "Aspire", 699.99, "Acer Aspire"));
+    computers.push_back(new Computer("PC-008", "Microsoft", "Surface", 1199.99, "Microsoft Surface"));
+    computers.push_back(new Computer("PC-009", "Samsung", "Galaxy Book", 999.99, "Samsung Galaxy Book"));
+    computers.push_back(new Computer("PC-010", "MSI", "Prestige", 1399.99, "MSI Prestige"));
+    
 
     bool running = true;
     while (running)
