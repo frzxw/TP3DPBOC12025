@@ -3,7 +3,7 @@
 #include "../../component/Hardware.cpp"
 #include "../../interfaces/Bootable.cpp"
 
-class Cooling : public Hardware, public Component, public Bootable
+class Cooling : public Hardware, public Component
 {
 protected:
     int maxThermalDissipation;
@@ -16,11 +16,17 @@ public:
         : Hardware(serialNumber, installationDate, physicallyInstalled), Component(id, manufacturer, model, price), maxThermalDissipation(thermalDissipation) {}
 
     // Destructor
-    virtual ~Cooling();
+    virtual ~Cooling() {}
 
     // Setters
-    void setMaxThermalDissipation(int maxThermalDissipation);
+    void setMaxThermalDissipation(int maxThermalDissipation)
+    {
+        this->maxThermalDissipation = maxThermalDissipation;
+    }
 
     // Getters
-    int getMaxThermalDissipation() const;
+    int getMaxThermalDissipation() const
+    {
+        return maxThermalDissipation;
+    }
 };
