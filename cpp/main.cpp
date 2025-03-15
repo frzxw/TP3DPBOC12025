@@ -6,12 +6,12 @@ using namespace std;
 void displayMainMenu();
 void displayComputerTable(const vector<Computer *> &computers);
 void manageComputer(Computer *computer);
-void addComponent(Computer *computer);
-void addComponentToMotherboard(Motherboard *motherboard);
-void displayComponentDetails(Computer *computer);
+void manageSoftware(Computer *computer);
+void addHardware(Computer *computer);
+void addHardwareToMotherboard(Motherboard *motherboard);
+void displayHardwareDetails(Computer *computer);
 Computer *createDemoComputer(const Date &today);
 void createNewComputer(vector<Computer *> &computers);
-
 string centerText(const string &text, int width);
 void drawHorizontalLine(const vector<int> &columnWidths, char left = '+', char mid = '+', char right = '+', char horizontal = '-');
 void drawTableRow(const vector<string> &data, const vector<int> &columnWidths);
@@ -370,13 +370,14 @@ void manageComputer(Computer *computer)
         cout << "\nManaging Computer: " << left << setw(50) << computer->getName() << "\n";
         cout << "Status: " << (computer->isPowered() ? "Powered ON" : "Powered OFF") << "\n";
 
-        cout << "\nCOMPUTER MENU\n";
-        cout << "1. Display Specifications\n";
+        cout << "\n1. Display Specifications\n";
         cout << "2. Power " << (computer->isPowered() ? "Off" : "On") << "\n";
-        cout << "3. Add Component to Computer\n";
-        cout << "4. Add Component to Motherboard\n";
-        cout << "5. Run Application\n";
-        cout << "6. Upgrade System\n";
+        cout << "3. Add Hardware to Computer\n";
+        cout << "4. Remove Hardware from Computer\n";
+        cout << "5. Add Hardware to Motherboard\n";
+        cout << "6. Remove Hardware from Motherboard\n";
+        cout << "7. Software Management\n";
+        cout << "8. Upgrade System\n";
         cout << "0. Back to Main Menu\n";
 
         int choice;
@@ -411,13 +412,17 @@ void manageComputer(Computer *computer)
             break;
 
         case 3:
-            addComponent(computer);
+            addHardware(computer);
             break;
 
         case 4:
+            removeHardware(computer);
+            break;
+
+        case 5:
             if (computer->getMotherboard())
             {
-                addComponentToMotherboard(computer->getMotherboard());
+                addHardwareToMotherboard(computer->getMotherboard());
             }
             else
             {
@@ -426,21 +431,23 @@ void manageComputer(Computer *computer)
             }
             break;
 
-        case 5:
-            // Implementation for running applications
-            if (!computer->isPowered())
+        case 6:
+            if (computer->getMotherboard())
             {
-                cout << "\n[!] Computer is powered off. Power on first.\n";
+                removeHardwareFromMotherboard(computer->getMotherboard());
             }
             else
             {
-                cout << "\n[*] Running application...\n";
-                cout << "[+] Application executed successfully.\n";
+                cout << "\n[!] No motherboard installed. Please add a motherboard first.\n";
+                system("pause");
             }
-            system("pause");
             break;
 
-        case 6:
+        case 7:
+            manageSoftware(computer); // New function for application management
+            break;
+
+        case 8:
             if (computer->isPowered())
             {
                 cout << "\n[!] Cannot upgrade while system is powered on.\n";
@@ -466,12 +473,12 @@ void manageComputer(Computer *computer)
     }
 }
 
-void addComponent(Computer *computer)
+void addHardware(Computer *computer)
 {
     system("cls");
     displayHeader();
 
-    cout << "\nADD COMPONENT\n";
+    cout << "\nADD HARDWARE\n";
     cout << "1. Add Motherboard\n";
     cout << "2. Add Power Supply\n";
     cout << "3. Add Cooling System\n";
@@ -740,7 +747,7 @@ void addComponent(Computer *computer)
         cin.ignore(numeric_limits<streamsize>::max(), '\n');
 
         Peripheral *peripheral;
-        if (peripheralType == 1)  // Monitor
+        if (peripheralType == 1) // Monitor
         {
             double screenSize;
             int resWidth, resHeight, refreshRate;
@@ -770,7 +777,7 @@ void addComponent(Computer *computer)
                 "MON-" + to_string(rand() % 1000),
                 manufacturer, model, 249.99);
         }
-        else if (peripheralType == 2)  // Keyboard
+        else if (peripheralType == 2) // Keyboard
         {
             bool mechanical, hasBacklight;
             string layoutType;
@@ -793,7 +800,7 @@ void addComponent(Computer *computer)
                 "KB-" + to_string(rand() % 1000),
                 manufacturer, model, 79.99);
         }
-        else if (peripheralType == 3)  // Mouse
+        else if (peripheralType == 3) // Mouse
         {
             int buttonCount, dpi;
             bool hasScrollWheel;
@@ -837,12 +844,208 @@ void addComponent(Computer *computer)
     }
 }
 
-void addComponentToMotherboard(Motherboard *motherboard)
+void removeHardware(Computer *computer)
 {
     system("cls");
     displayHeader();
 
-    cout << "\nADD COMPONENT TO MOTHERBOARD\n";
+    cout << "\nREMOVE HARDWARE\n";
+    cout << "1. Remove Motherboard\n";
+    cout << "2. Remove Power Supply\n";
+    cout << "3. Remove Cooling System\n";
+    cout << "4. Remove Operating System\n";
+    cout << "5. Remove BIOS\n";
+    cout << "6. Remove Peripheral\n";
+    cout << "0. Back\n";
+
+    int choice;
+    cout << "\n-> Enter your choice: ";
+    cin >> choice;
+    cin.clear();
+    cin.ignore(numeric_limits<streamsize>::max(), '\n');
+
+    switch (choice)
+    {
+    case 1:
+    {
+        if (!computer->getMotherboard())
+        {
+            cout << "\n[!] No motherboard installed.\n";
+            system("pause");
+            return;
+        }
+
+        // Don't allow removing motherboard if computer is powered on
+        if (computer->isPowered())
+        {
+            cout << "\n[!] Cannot remove motherboard while computer is powered on. Shut down first.\n";
+            system("pause");
+            return;
+        }
+
+        // Confirm removal
+        char confirm;
+        cout << "\n[!] Removing the motherboard will also remove all attached hardwares (CPU, RAM, etc.).\n";
+        cout << "Are you sure you want to proceed? (y/n): ";
+        cin >> confirm;
+
+        if (tolower(confirm) != 'y')
+        {
+            cout << "\nOperation cancelled.\n";
+            system("pause");
+            return;
+        }
+
+        computer->setMotherboard(nullptr);
+        cout << "\n[-] Motherboard removed successfully.\n";
+        system("pause");
+        break;
+    }
+
+    case 2:
+    {
+        if (!computer->getPowerSupply())
+        {
+            cout << "\n[!] No power supply installed.\n";
+            system("pause");
+            return;
+        }
+
+        // Don't allow removing power supply if computer is powered on
+        if (computer->isPowered())
+        {
+            cout << "\n[!] Cannot remove power supply while computer is powered on. Shut down first.\n";
+            system("pause");
+            return;
+        }
+
+        computer->setPowerSupply(nullptr);
+        cout << "\n[-] Power supply removed successfully.\n";
+        system("pause");
+        break;
+    }
+
+    case 3:
+    {
+        if (!computer->getCooling())
+        {
+            cout << "\n[!] No cooling system installed.\n";
+            system("pause");
+            return;
+        }
+
+        // Don't allow removing cooling if computer is powered on
+        if (computer->isPowered())
+        {
+            cout << "\n[!] Cannot remove cooling system while computer is powered on. Shut down first.\n";
+            system("pause");
+            return;
+        }
+
+        computer->setCooling(nullptr);
+        cout << "\n[-] Cooling system removed successfully.\n";
+        system("pause");
+        break;
+    }
+
+    case 4:
+    {
+        if (!computer->getOperatingSystem())
+        {
+            cout << "\n[!] No operating system installed.\n";
+            system("pause");
+            return;
+        }
+
+        // Don't allow removing OS if computer is powered on
+        if (computer->isPowered())
+        {
+            cout << "\n[!] Cannot remove operating system while computer is powered on. Shut down first.\n";
+            system("pause");
+            return;
+        }
+
+        computer->setOperatingSystem(nullptr);
+        cout << "\n[-] Operating System removed successfully.\n";
+        system("pause");
+        break;
+    }
+
+    case 5:
+    {
+        if (!computer->getBIOS())
+        {
+            cout << "\n[!] No BIOS installed.\n";
+            system("pause");
+            return;
+        }
+
+        // Don't allow removing BIOS if computer is powered on
+        if (computer->isPowered())
+        {
+            cout << "\n[!] Cannot remove BIOS while computer is powered on. Shut down first.\n";
+            system("pause");
+            return;
+        }
+
+        computer->setBIOS(nullptr);
+        cout << "\n[-] BIOS removed successfully.\n";
+        system("pause");
+        break;
+    }
+
+    case 6:
+    {
+        vector<Peripheral *> peripherals;
+        // Need to get the peripherals from the computer - assuming there's a method
+
+        if (peripherals.empty())
+        {
+            cout << "\n[!] No peripherals installed.\n";
+            system("pause");
+            return;
+        }
+
+        cout << "\nInstalled peripherals:\n";
+        for (size_t i = 0; i < peripherals.size(); i++)
+        {
+            cout << (i + 1) << ". " << peripherals[i]->getManufacturer() << " "
+                 << peripherals[i]->getModel() << " (" << peripherals[i]->getName() << ")\n";
+        }
+
+        int peripheralIndex;
+        cout << "\nSelect peripheral to remove (1-" << peripherals.size() << ") or 0 to cancel: ";
+        cin >> peripheralIndex;
+
+        if (peripheralIndex < 1 || peripheralIndex > peripherals.size())
+        {
+            cout << "\nOperation cancelled.\n";
+            system("pause");
+            return;
+        }
+
+        computer->removePeripheral(peripherals[peripheralIndex - 1]);
+        cout << "\n[-] Peripheral removed successfully.\n";
+        system("pause");
+        break;
+    }
+
+    case 0:
+        return;
+
+    default:
+        cout << "\n[!] Invalid choice.\n";
+        system("pause");
+        break;
+    }
+}
+
+void addHardwareToMotherboard(Motherboard *motherboard)
+{
+    system("cls");
+    displayHeader();
+
+    cout << "\nADD HARDWARE TO MOTHERBOARD\n";
     cout << "1. Add CPU\n";
     cout << "2. Add RAM\n";
     cout << "3. Add Graphics Card\n";
@@ -1111,6 +1314,234 @@ void addComponentToMotherboard(Motherboard *motherboard)
 
         motherboard->installExpansionCard(networkCard);
         cout << "\n[+] Network card installed successfully.\n";
+        system("pause");
+        break;
+    }
+
+    case 0:
+        return;
+
+    default:
+        cout << "\n[!] Invalid choice.\n";
+        system("pause");
+        break;
+    }
+}
+
+void removeHardwareFromMotherboard(Motherboard *motherboard)
+{
+    system("cls");
+    displayHeader();
+
+    cout << "\nREMOVE HARDWARE FROM MOTHERBOARD\n";
+    cout << "1. Remove CPU\n";
+    cout << "2. Remove RAM\n";
+    cout << "3. Remove Graphics Card\n";
+    cout << "4. Remove Storage Device\n";
+    cout << "5. Remove Network Card\n";
+    cout << "6. Remove Sound Card\n";
+    cout << "0. Back\n";
+
+    int choice;
+    cout << "\n-> Enter your choice: ";
+    cin >> choice;
+    cin.clear();
+    cin.ignore(numeric_limits<streamsize>::max(), '\n');
+
+    switch (choice)
+    {
+    case 1:
+    {
+        if (!motherboard->getCPU())
+        {
+            cout << "\n[!] No CPU installed.\n";
+            system("pause");
+            return;
+        }
+
+        CPU *cpu = motherboard->getCPU();
+        cout << "\nCurrently installed CPU: " << cpu->getManufacturer() << " " << cpu->getModel() << "\n";
+
+        char confirm;
+        cout << "Are you sure you want to remove this CPU? (y/n): ";
+        cin >> confirm;
+
+        if (tolower(confirm) == 'y')
+        {
+            motherboard->removeCPU();
+            cout << "\n[-] CPU removed successfully.\n";
+        }
+        else
+        {
+            cout << "\nOperation cancelled.\n";
+        }
+        system("pause");
+        break;
+    }
+
+    case 2:
+    {
+        vector<RAM *> ramSlots = motherboard->getRamSlots();
+
+        if (ramSlots.empty())
+        {
+            cout << "\n[!] No RAM modules installed.\n";
+            system("pause");
+            return;
+        }
+
+        cout << "\nInstalled RAM modules:\n";
+        for (size_t i = 0; i < ramSlots.size(); i++)
+        {
+            cout << (i + 1) << ". " << ramSlots[i]->getCapacityGB() << "GB "
+                 << ramSlots[i]->getManufacturer() << " " << ramSlots[i]->getModel()
+                 << " (" << ramSlots[i]->getType() << " @ " << ramSlots[i]->getSpeedMHz() << "MHz)\n";
+        }
+
+        int ramIndex;
+        cout << "\nSelect RAM module to remove (1-" << ramSlots.size() << ") or 0 to cancel: ";
+        cin >> ramIndex;
+
+        if (ramIndex < 1 || ramIndex > ramSlots.size())
+        {
+            cout << "\nOperation cancelled.\n";
+            system("pause");
+            return;
+        }
+
+        motherboard->removeRAM(ramSlots[ramIndex - 1]);
+        cout << "\n[-] RAM module removed successfully.\n";
+        system("pause");
+        break;
+    }
+
+    case 3:
+    {
+        if (!motherboard->getGPU())
+        {
+            cout << "\n[!] No graphics card installed.\n";
+            system("pause");
+            return;
+        }
+
+        GraphicsCard *gpu = motherboard->getGPU();
+        cout << "\nCurrently installed GPU: " << gpu->getManufacturer() << " "
+             << gpu->getModel() << " (" << gpu->getGpuModel() << ", " << gpu->getVramGB() << "GB VRAM)\n";
+
+        char confirm;
+        cout << "Are you sure you want to remove this graphics card? (y/n): ";
+        cin >> confirm;
+
+        if (tolower(confirm) == 'y')
+        {
+            motherboard->removeExpansionCard(gpu);
+            cout << "\n[-] Graphics card removed successfully.\n";
+        }
+        else
+        {
+            cout << "\nOperation cancelled.\n";
+        }
+        system("pause");
+        break;
+    }
+
+    case 4:
+    {
+        vector<StorageDevice *> storageSlots = motherboard->getStorageSlots();
+
+        if (storageSlots.empty())
+        {
+            cout << "\n[!] No storage devices installed.\n";
+            system("pause");
+            return;
+        }
+
+        cout << "\nInstalled storage devices:\n";
+        for (size_t i = 0; i < storageSlots.size(); i++)
+        {
+            string deviceType = "Storage Device";
+            if (dynamic_cast<SSD *>(storageSlots[i]))
+                deviceType = "SSD";
+            else if (dynamic_cast<HDD *>(storageSlots[i]))
+                deviceType = "HDD";
+
+            cout << (i + 1) << ". " << deviceType << ": " << storageSlots[i]->getManufacturer() << " "
+                 << storageSlots[i]->getModel() << " (" << storageSlots[i]->getCapacityGB() << "GB)\n";
+        }
+
+        int storageIndex;
+        cout << "\nSelect storage device to remove (1-" << storageSlots.size() << ") or 0 to cancel: ";
+        cin >> storageIndex;
+
+        if (storageIndex < 1 || storageIndex > storageSlots.size())
+        {
+            cout << "\nOperation cancelled.\n";
+            system("pause");
+            return;
+        }
+
+        motherboard->removeStorage(storageSlots[storageIndex - 1]);
+        cout << "\n[-] Storage device removed successfully.\n";
+        system("pause");
+        break;
+    }
+
+    case 5:
+    {
+        if (!motherboard->getNetworkCard())
+        {
+            cout << "\n[!] No network card installed.\n";
+            system("pause");
+            return;
+        }
+
+        NetworkCard *networkCard = motherboard->getNetworkCard();
+        cout << "\nCurrently installed network card: " << networkCard->getManufacturer() << " "
+             << networkCard->getModel() << " (" << networkCard->getMaxSpeedMbps() << " Mbps)\n";
+
+        char confirm;
+        cout << "Are you sure you want to remove this network card? (y/n): ";
+        cin >> confirm;
+
+        if (tolower(confirm) == 'y')
+        {
+            motherboard->removeExpansionCard(networkCard);
+            cout << "\n[-] Network card removed successfully.\n";
+        }
+        else
+        {
+            cout << "\nOperation cancelled.\n";
+        }
+        system("pause");
+        break;
+    }
+
+    case 6:
+    {
+        if (!motherboard->getSoundCard())
+        {
+            cout << "\n[!] No sound card installed.\n";
+            system("pause");
+            return;
+        }
+
+        SoundCard *soundCard = motherboard->getSoundCard();
+        cout << "\nCurrently installed sound card: " << soundCard->getManufacturer() << " "
+             << soundCard->getModel() << "\n";
+
+        char confirm;
+        cout << "Are you sure you want to remove this sound card? (y/n): ";
+        cin >> confirm;
+
+        if (tolower(confirm) == 'y')
+        {
+            motherboard->removeExpansionCard(soundCard);
+            cout << "\n[-] Sound card removed successfully.\n";
+        }
+        else
+        {
+            cout << "\nOperation cancelled.\n";
+        }
         system("pause");
         break;
     }
