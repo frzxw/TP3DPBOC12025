@@ -8,7 +8,9 @@ void displayComputerTable(const vector<Computer *> &computers);
 void manageComputer(Computer *computer);
 void manageSoftware(Computer *computer);
 void addHardware(Computer *computer);
+void removeHardware(Computer *computer);
 void addHardwareToMotherboard(Motherboard *motherboard);
+void removeHardwareFromMotherboard(Motherboard *motherboard);
 void displayHardwareDetails(Computer *computer);
 Computer *createDemoComputer(const Date &today);
 void createNewComputer(vector<Computer *> &computers);
@@ -444,7 +446,7 @@ void manageComputer(Computer *computer)
             break;
 
         case 7:
-            manageSoftware(computer); // New function for application management
+            // Software management
             break;
 
         case 8:
