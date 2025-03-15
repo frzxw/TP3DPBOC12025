@@ -262,17 +262,17 @@ public:
     // Display computer specification
     void displaySpecifications()
     {
-        std::cout << "=== Computer Specifications ===" << std::endl;
+        std::cout << "Computer Specifications:" << std::endl;
         std::cout << "Name: " << name << std::endl;
         std::cout << "Manufacturer: " << getManufacturer() << std::endl;
         std::cout << "Model: " << getModel() << std::endl;
         std::cout << "Power status: " << (powerStatus ? "ON" : "OFF") << std::endl;
 
-        std::cout << "\n--- Hardware Components ---" << std::endl;
+        std::cout << "\nHardware Components:" << std::endl;
         if (motherboard)
         {
             std::cout << "Motherboard: " << motherboard->getManufacturer() << " " << motherboard->getModel() << std::endl;
-            motherboard->displayInfo(); // This uses the displayInfo method from the Motherboard class
+            motherboard->displayInfo();
         }
 
         if (powerSupply)
@@ -284,47 +284,47 @@ public:
         if (cooling)
         {
             std::cout << "Cooling System: " << cooling->getManufacturer() << " " << cooling->getModel() << std::endl;
-            std::cout << " - Max Thermal Dissipation: " << cooling->getMaxThermalDissipation() << "W" << std::endl;
+            std::cout << "Max Thermal Dissipation: " << cooling->getMaxThermalDissipation() << "W" << std::endl;
 
             if (AirCooling *airCooler = dynamic_cast<AirCooling *>(cooling))
             {
-                std::cout << " - Type: Air Cooling" << std::endl;
-                std::cout << " - Fans: " << airCooler->getFanCount() << " @ " << airCooler->getFanSpeedRPM() << " RPM" << std::endl;
+                std::cout << "Type: Air Cooling" << std::endl;
+                std::cout << "Fans: " << airCooler->getFanCount() << " @ " << airCooler->getFanSpeedRPM() << " RPM" << std::endl;
             }
             else if (LiquidCooling *liquidCooler = dynamic_cast<LiquidCooling *>(cooling))
             {
-                std::cout << " - Type: Liquid Cooling" << std::endl;
-                std::cout << " - Fluid: " << liquidCooler->getFluidType() << " (" << liquidCooler->getFluidVolume() << " ml)" << std::endl;
-                std::cout << " - Has pump: " << (liquidCooler->getHasPump() ? "Yes" : "No") << std::endl;
+                std::cout << "Type: Liquid Cooling" << std::endl;
+                std::cout << "Fluid: " << liquidCooler->getFluidType() << " (" << liquidCooler->getFluidVolume() << " ml)" << std::endl;
+                std::cout << "Has pump: " << (liquidCooler->getHasPump() ? "Yes" : "No") << std::endl;
             }
         }
 
-        std::cout << "\n--- Peripherals ---" << std::endl;
+        std::cout << "\nPeripherals:" << std::endl;
         for (auto peripheral : peripherals)
         {
-            std::cout << "- " << peripheral->getName() << ": " << peripheral->getManufacturer() << " " << peripheral->getModel() << std::endl;
+            std::cout << peripheral->getName() << ": " << peripheral->getManufacturer() << " " << peripheral->getModel() << std::endl;
 
             if (Monitor *monitor = dynamic_cast<Monitor *>(peripheral))
             {
-                std::cout << "  Monitor: " << monitor->getScreenSizeInches() << "\" "
+                std::cout << "Monitor: " << monitor->getScreenSizeInches() << "\" "
                           << monitor->getResolutionWidth() << "x" << monitor->getResolutionHeight()
                           << " @ " << monitor->getRefreshRate() << "Hz (" << monitor->getPanelType() << ")" << std::endl;
             }
             else if (Keyboard *keyboard = dynamic_cast<Keyboard *>(peripheral))
             {
-                std::cout << "  Keyboard: " << keyboard->getLayoutType()
+                std::cout << "Keyboard: " << keyboard->getLayoutType()
                           << (keyboard->isMechanical() ? " (Mechanical)" : "")
                           << (keyboard->hasBacklightFeature() ? " with backlight" : "") << std::endl;
             }
             else if (Mouse *mouse = dynamic_cast<Mouse *>(peripheral))
             {
-                std::cout << "  Mouse: " << mouse->getButtonCount() << " buttons, "
+                std::cout << "Mouse: " << mouse->getButtonCount() << " buttons, "
                           << mouse->getDPI() << " DPI"
                           << (mouse->getHasScrollWheel() ? " with scroll wheel" : "") << std::endl;
             }
         }
 
-        std::cout << "\n--- Software ---" << std::endl;
+        std::cout << "\nSoftware:" << std::endl;
         if (bios)
         {
             std::cout << "BIOS: " << bios->getManufacturer() << " version " << bios->getFirmwareVersion() << std::endl;
@@ -341,7 +341,7 @@ public:
         {
             if (Application *app = dynamic_cast<Application *>(software))
             {
-                std::cout << "- " << app->getAppName() << " by " << app->getDeveloper()
+                std::cout << app->getAppName() << " by " << app->getDeveloper()
                           << " (ver " << app->getVersion() << ")" << std::endl;
             }
         }
@@ -349,7 +349,7 @@ public:
         std::cout << "Installed Drivers: " << drivers.size() << std::endl;
         for (auto driver : drivers)
         {
-            std::cout << "- " << driver->getDeviceName() << " driver (ver " << driver->getDriverVersion() << ")"
+            std::cout << driver->getDeviceName() << " driver (ver " << driver->getDriverVersion() << ")"
                       << (driver->getIsSigned() ? " [Signed]" : " [Unsigned]") << std::endl;
         }
     }
