@@ -335,7 +335,7 @@ void manageComputer(Computer *computer)
             break;
 
         case 7:
-            // Software management
+            manageSoftware(computer);
             break;
 
         case 8:
