@@ -36,7 +36,7 @@ void displayHeader()
 void displayMainMenu()
 {
     cout << "\n 1. Show Computer\n";
-    cout << " 2. Update Computer\n";
+    cout << " 2. Manage Computer\n";
     cout << " 3. Create Computer\n";
     cout << " 4. Delete Computer\n";
     cout << " 0. Exit\n\n";
